@@ -169,50 +169,35 @@ public class ItemController {
 
 	@PostMapping("/update")
 	public String itemUpdate(Item item, Model model) throws Exception {
-		log.info("itemUpdate" + item.toString());
+		log.info("/update item= " + item.toString());
 		MultipartFile file = item.getPicture();
-		String oldUrl = null;
-		if (file != null && file.getSize() > 0) {
-			// 기존의 있는 외부저장소에 있는 파일을 삭제
-			Item oldItem = itemservice.read(item);
-			oldUrl = oldItem.getUrl();
+		Item oldItem = itemservice.read(item);
 
-			// 새로 등록 할 파일
+		if (file != null && file.getSize() > 0) {
+			// 새로운업로드 이미지파일
 			log.info("originalName: " + file.getOriginalFilename());
 			log.info("size: " + file.getSize());
 			log.info("contentType: " + file.getContentType());
 			String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
 			item.setUrl(createdFileName);
+			int count = itemservice.update(item);
+			if (count > 0) {
+				// 테이블에 수정내용이 완료가 되고 그리고 나서 이전 이미지 파일을 삭제한다.
+				if (oldItem.getUrl() != null)
+					deleteFile(oldItem.getUrl());
+				model.addAttribute("message", "%s 상품수정 성공".formatted(item.getName()));
+				return "item/success";
+			}
+		} else {
+			item.setUrl(oldItem.getUrl());
+			int count = itemservice.update(item);
+			if (count > 0) {
+				model.addAttribute("message", "%s 상품수정 성공".formatted(item.getName()));
+				return "item/success";
+			}
 		}
-		int count = itemservice.update(item);
 
-		if (count > 0) {
-			// 테이블에 수정내용이 완료가 되고 그리고 나서 이전 이미지 파일을 삭제한다.
-			if (oldUrl != null)
-				deleteFile(oldUrl);
-			model.addAttribute("message", "%s 상품 수정이 성공되었습니다.".formatted(item.getName()));
-			return "item/success";
-		}
-		model.addAttribute("message", "%s 상품 수정이 실패되었습니다.".formatted(item.getName()));
+		model.addAttribute("message", "%s 상품수정 실패".formatted(item.getName()));
 		return "item/failed";
 	}
-
-	@GetMapping("/delete")
-	public String itemDelete(Item item, Model model) throws Exception {
-		log.info("/delete" + item.toString());
-		String url = itemservice.getPicture(item);
-		int count = itemservice.delete(item);
-
-		if (count > 0) {
-			// 테이블에 수정내용이 완료가 되고 그리고 나서 이전 이미지 파일을 삭제한다.
-			if (url != null)
-				deleteFile(url);
-			model.addAttribute("message", "%s 상품 삭제 성공되었습니다.".formatted(item.getId()));
-			return "item/success";
-		}
-		model.addAttribute("message", "%s 상품 삭제 실패되었습니다.".formatted(item.getId()));
-		return "item/failed";
-
-	}
-
 }
