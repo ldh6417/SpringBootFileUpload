@@ -184,45 +184,24 @@ body {
 
 	<div class="detail-container">
 		<div class="detail-header">
-			<span class="post-no">MEMBER NO. ${member.no}</span>
-			<h1>${member.id}</h1>
+			<span class="post-no">상품아이디 ${item.id}</span>
+			<h1>${item.name}</h1>
 			<div class="post-info">
-				<span>NAME: <b>${member.name}</b></span> <span>DATE: <b><fmt:formatDate
-							value="${member.regDate}" pattern="yyyy.MM.dd HH:mm" /></b></span>
+				<span>price: <b>${item.price}</b></span> 
 			</div>
 		</div>
 
-		<div class="btn-form">
-			<form:form modelAttribute="member">
-				<form:hidden path="no" />
-				<form:select path="authList[0].auth" disabled="true">
-					<form:option value="" label="=== 선택해 주세요 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
-				<form:select path="authList[1].auth" disabled="true">
-					<form:option value="" label="=== 선택해 주세요 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
-				<form:select path="authList[2].auth" disabled="true">
-					<form:option value="" label="=== 선택해 주세요 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
-			</form:form>
+		<div class="btn-area">
+			<img alt="상품이미지 ${item.name}" src="/item/display?id=${item.id}" width="400">
 		</div>
 
 		<div class="btn-area">
-			<a href="/member/memberList" class="btn btn-list">회원리스트</a>
+			<a href="/item/list" class="btn btn-list">상품목록리스트</a>
 
 			<div class="btn-group">
-				<a href="/member/updateForm?no=${member.no}" class="btn btn-edit">글
-					수정하기</a> <a href="/member/delete?no=${member.no}"
-					class="btn btn-delete" onclick="return confirm('정말 삭제하시겠습니까?')">회원
+				<a href="/item/updateForm?id=${item.id}" class="btn btn-edit">상품
+					수정하기</a> <a href="/item/delete?id=${item.id}"
+					class="btn btn-delete" onclick="return confirm('정말 삭제하시겠습니까?')">상품
 					삭제하기</a>
 			</div>
 		</div>

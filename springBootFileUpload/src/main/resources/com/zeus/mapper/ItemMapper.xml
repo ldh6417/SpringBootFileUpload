@@ -12,7 +12,9 @@
 
 
 	<select id="read" resultType="Item">
-
+		SELECT id,name,price,description,url
+		FROM item
+		WHERE id = #{id}
 	</select>
 
 	<update id="update">
@@ -30,6 +32,6 @@
 	</select>
 
 	<select id="getPicture" resultType="String">
-
+		SELECT url FROM item WHERE id = #{id}
 	</select>
 </mapper>
