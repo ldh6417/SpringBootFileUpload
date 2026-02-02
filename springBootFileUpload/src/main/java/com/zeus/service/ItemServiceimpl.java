@@ -13,7 +13,7 @@ import com.zeus.mapper.ItemMapper;
 public class ItemServiceimpl implements ItemService {
 	@Autowired
 	private ItemMapper itemMapper;
-	
+
 	@Override
 	@Transactional
 	public int create(Item item) throws Exception {
@@ -41,8 +41,8 @@ public class ItemServiceimpl implements ItemService {
 
 	@Override
 	public List<Item> list() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<Item> itemList = itemMapper.list();
+		return itemList;
 	}
 
 	@Override

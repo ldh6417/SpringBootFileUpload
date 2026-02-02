@@ -3,9 +3,11 @@
 <mapper namespace="com.zeus.mapper.ItemMapper">
 	<insert id="create" parameterType="Item">
 		INSERT INTO item
-		(id, name, price, description, url)
+		(id, name,
+		price, description, url)
 		VALUES
-		(item_seq.NEXTVAL, #{name}, #{price}, #{description}, #{url})
+		(item_seq.NEXTVAL, #{name}, #{price},
+		#{description}, #{url})
 	</insert>
 
 
@@ -22,7 +24,9 @@
 	</delete>
 
 	<select id="list" resultType="Item"> 
-<![CDATA[  ]]>
+	<![CDATA[ 
+	SELECT id,name,price,description,url FROM item WHERE id > 0  ORDER BY id DESC 
+	]]>
 	</select>
 
 	<select id="getPicture" resultType="String">

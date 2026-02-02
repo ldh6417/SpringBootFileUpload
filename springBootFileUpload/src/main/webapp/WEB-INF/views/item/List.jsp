@@ -142,58 +142,42 @@ body {
 			</h1>
 
 			<div class="btn-group">
-				<a href="/member/memberList" class="btn-main secondary">회원리스트</a> <a
-					href="/member/joinForm" class="btn-main">회원가입</a>
+				<a href="/item/List" class="btn-main secondary">상품목록 리스트</a> <a
+					href="/item/createForm" class="btn-main">상품등록</a>
 			</div>
 		</div>
 
 		<table class="t1-table">
 			<thead>
 				<tr>
-					<th width="10%">No</th>
-					<th width="20%">ID</th>
-					<th width="20%">PW</th>
-					<th width="20%">Name</th>
-					<th width="30%">RegDate</th>
+					<th width="10%">id</th>
+					<th width="10%">name</th>
+					<th width="10%">price</th>
+					<th width="70%">url</th>
 				</tr>
 			</thead>
 
 			<tbody>
 
-				<!-- 검색 영역은 choose 밖으로 빼기 -->
-				<div class="search-container">
-					<form action="/member/search" method="get" class="search-form">
-						<select name="searchType" class="search-select">
-							<option value="id">id</option>
-							<option value="name">name</option>
-						</select> <input type="text" name="keyword" class="search-input"
-							placeholder="Search member...">
-						<button type="submit" class="btn-search">SEARCH</button>
-					</form>
-				</div>
 
 				<c:choose>
 
-					<c:when test="${not empty memberList}">
-						<c:forEach var="member" items="${memberList}">
+					<c:when test="${not empty itemList}">
+						<c:forEach var="item" items="${itemList}">
 							<tr>
-								<td>${member.no}</td>
+								<td>${item.id}</td>
 
 								<td class="title-cell"><a
-									href="/member/detail?no=${member.no}"> ${member.id} </a></td>
-
-								<td>${member.pw}</td>
-								<td>${member.name}</td>
-
-								<td><fmt:formatDate value="${member.regDate}"
-										pattern="yyyy.MM.dd" /></td>
+									href="/item/detail?id=${item.id}"> ${item.name} </a></td>
+								<td>${item.price}</td>
+								<td>${item.url}</td>
 							</tr>
 						</c:forEach>
 					</c:when>
 
 					<c:otherwise>
 						<tr>
-							<td colspan="5" style="padding: 50px; color: #777;">등록된 회원이
+							<td colspan="4" style="padding: 50px; color: #777;">등록된 상품이
 								없습니다.</td>
 						</tr>
 					</c:otherwise>
