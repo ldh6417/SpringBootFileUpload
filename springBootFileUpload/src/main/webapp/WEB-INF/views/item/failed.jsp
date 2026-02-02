@@ -247,7 +247,7 @@ p {
 		</p>
 
 		<a href="/item/creatForm" class="btn-list">상품등록</a> <a
-			href="/item/itemlist" class="btn-list">상품리스트</a>
+			href="/item/list" class="btn-list">상품리스트</a>
 	</div>
 
 

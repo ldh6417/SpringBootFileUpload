@@ -142,7 +142,7 @@ body {
 			</h1>
 
 			<div class="btn-group">
-				<a href="/item/List" class="btn-main secondary">상품목록 리스트</a> <a
+				<a href="/item/list" class="btn-main secondary">상품목록 리스트</a> <a
 					href="/item/createForm" class="btn-main">상품등록</a>
 			</div>
 		</div>
