@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T1 Shop | Item Register</title>
+<title>상품 등록</title>
 <style>
 /* 기존 스타일 유지 및 파일 업로드용 스타일 추가 */
 :root {

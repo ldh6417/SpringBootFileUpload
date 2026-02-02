@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T1 Community | Transmission Complete</title>
+<title>성공</title>
 <style>
     :root {
         --t1-red: #E2012D;

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T1 Community | Mission Detail</title>
+<title>상품 상세페이지</title>
 <style>
 :root {
 	--t1-red: #E2012D;

@@ -86,6 +86,16 @@ public class ItemController {
 		return createdFileName;
 	}
 
+	// 외부저장소 자료업로드 파일명생성후 저장
+	// c:/upload/"../window/system.ini" 디렉토리 탈출공격(path tarversal)
+	private boolean deleteFile(String fileName) throws Exception {
+		if (fileName.contains("..")) {
+			throw new IllegalArgumentException("잘못된 경로 입니다.");
+		}
+		File file = new File(uploadPath, fileName);
+		return (file.exists() == true) ? (file.delete()) : (false);
+	}
+
 	@GetMapping("/list")
 	public String itemList(Model model) throws Exception {
 		log.info("/itemList");
@@ -101,25 +111,25 @@ public class ItemController {
 		model.addAttribute("item", item);
 		return "item/detail";
 	}
-	
-	//화면을 요청하는것이아닌 테이터를 보내줄것을 요청.
+
+	// 화면을 요청하는것이아닌 테이터를 보내줄것을 요청.
 	@ResponseBody
 	@GetMapping("/display")
 	public ResponseEntity<byte[]> itemDisplay(Item item) throws Exception {
 		log.info("FILE  url: ");
-		//파일을 읽기위한 스트림
+		// 파일을 읽기위한 스트림
 		InputStream in = null;
 		ResponseEntity<byte[]> entity = null;
-		
+
 		String url = itemservice.getPicture(item);
 		log.info("FILE url: " + url);
 		try {
-			//파일명의 확장자를 가져옴 String formatName =  "jpg"; 
+			// 파일명의 확장자를 가져옴 String formatName = "jpg";
 			String formatName = url.substring(url.lastIndexOf(".") + 1);
 			MediaType mType = getMediaType(formatName);
 			HttpHeaders headers = new HttpHeaders();
 			in = new FileInputStream(uploadPath + File.separator + url);
-			//이미지파일타입이 널이 아니하면 헤더에 이미지타입을 저장
+			// 이미지파일타입이 널이 아니하면 헤더에 이미지타입을 저장
 			if (mType != null) {
 				headers.setContentType(mType);
 			}
@@ -131,6 +141,14 @@ public class ItemController {
 			in.close();
 		}
 		return entity;
+	}
+
+	@GetMapping("/updateForm")
+	public String itemUpdateForm(Item i, Model model) throws Exception {
+		log.info("updateForm item: " + i.toString());
+		Item item = this.itemservice.read(i);
+		model.addAttribute("item", item);
+		return "item/updateForm";
 	}
 
 	private MediaType getMediaType(String form) {
@@ -147,5 +165,35 @@ public class ItemController {
 			}
 		}
 		return null;
+	}
+
+	@PostMapping("/update")
+	public String itemUpdate(Item item, Model model) throws Exception {
+		log.info("itemUpdate" + item.toString());
+		MultipartFile file = item.getPicture();
+		String oldUrl = null;
+		if (file != null && file.getSize() > 0) {
+			// 기존의 있는 외부저장소에 있는 파일을 삭제
+			Item oldItem = itemservice.read(item);
+			oldUrl = oldItem.getUrl();
+
+			// 새로 등록 할 파일
+			log.info("originalName: " + file.getOriginalFilename());
+			log.info("size: " + file.getSize());
+			log.info("contentType: " + file.getContentType());
+			String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
+			item.setUrl(createdFileName);
+		}
+		int count = itemservice.update(item);
+
+		if (count > 0) {
+			// 테이블에 수정내용이 완료가 되고 그리고 나서 이전 이미지 파일을 삭제한다.
+			if (oldUrl != null)
+				deleteFile(oldUrl);
+			model.addAttribute("message", "%s 상품 수정이 성공되었습니다.".formatted(item.getName()));
+			return "item/success";
+		}
+		model.addAttribute("message", "%s 상품 수정이 실패되었습니다.".formatted(item.getName()));
+		return "item/failed";
 	}
 }

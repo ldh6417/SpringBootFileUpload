@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T1 Community | Member List</title>
+<title>상품 리스트</title>
 
 <style>
 :root {

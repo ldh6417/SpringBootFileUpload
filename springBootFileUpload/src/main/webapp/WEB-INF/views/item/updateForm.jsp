@@ -2,13 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>T1 Community | Write</title>
+<title>상품정보</title>
+
 <style>
-/* T1 Official Theme */
 :root {
 	--t1-red: #E2012D;
 	--t1-black: #0f0f0f;
@@ -25,6 +26,7 @@ body {
 	align-items: center;
 	min-height: 100vh;
 	margin: 0;
+	padding: 50px 0;
 }
 
 .write-container {
@@ -45,14 +47,12 @@ body {
 .header h1 {
 	font-size: 2rem;
 	font-weight: 900;
-	letter-spacing: -1px;
 }
 
 .header span {
 	color: var(--t1-red);
 }
 
-/* Form Styles */
 .form-group {
 	margin-bottom: 25px;
 }
@@ -62,11 +62,10 @@ body {
 	font-size: 0.9rem;
 	color: var(--t1-gold);
 	margin-bottom: 8px;
-	text-transform: uppercase;
 	font-weight: bold;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="number"], textarea {
 	width: 100%;
 	padding: 12px 15px;
 	background: #0b0b0b;
@@ -74,17 +73,76 @@ input[type="text"], input[type="password"] {
 	border-radius: 5px;
 	color: #fff;
 	font-size: 1rem;
-	box-sizing: border-box;
 	transition: 0.3s;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+textarea {
+	height: 120px;
+	resize: none;
+}
+
+input:focus, textarea:focus {
 	border-color: var(--t1-red);
 	outline: none;
 	box-shadow: 0 0 10px rgba(226, 1, 45, 0.3);
 }
 
-/* Buttons */
+/* 파일 업로드 */
+/* 파일 업로드 래퍼 */
+.file-upload-wrapper {
+	width: 100%;
+}
+
+/* 숨겨진 실제 input */
+.file-input {
+	display: none;
+}
+
+/* 전체 파일 선택 박스 */
+.file-label {
+	display: flex;
+	align-items: center;
+	height: 48px; /* 높이 고정 */
+	background: #0b0b0b;
+	border: 1px solid #333;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: hidden;
+	transition: 0.3s;
+}
+
+.file-label:hover {
+	border-color: var(--t1-red);
+}
+
+/* 왼쪽 버튼 영역 */
+.file-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 110px; /* 너비 고정 */
+	height: 100%; /* 부모 높이 꽉 채움 */
+	background: #222;
+	color: var(--t1-gold);
+	font-size: 0.85rem;
+	font-weight: bold;
+	border-right: 1px solid #333;
+}
+
+/* 오른쪽 파일명 표시 영역 */
+.file-name-text {
+	display: flex;
+	align-items: center;
+	padding: 0 15px;
+	height: 100%;
+	color: #666;
+	font-size: 0.9rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* 버튼 영역 */
 .btn-area {
 	display: flex;
 	gap: 15px;
@@ -100,179 +158,161 @@ input[type="text"]:focus, input[type="password"]:focus {
 	border-radius: 5px;
 	cursor: pointer;
 	transition: 0.3s;
-	text-transform: uppercase;
+	text-align: center;
+	text-decoration: none;
 }
 
+/* 리스트 버튼 */
+.btn-list {
+	background: #333;
+	color: #fff;
+}
+
+.btn-list:hover {
+	background: #444;
+	transform: translateY(-3px);
+}
+
+/* 수정 버튼 */
 .btn-submit {
 	background: var(--t1-red);
 	color: #fff;
 }
 
 .btn-submit:hover {
-	background: #ff1a4a;
+	background: #ffffff;
+	color: var(--t1-red);
 	transform: translateY(-3px);
 	box-shadow: 0 5px 15px rgba(226, 1, 45, 0.5);
 }
 
+/* 초기화 버튼 */
 .btn-reset {
-	background: #333;
+	background: var(--t1-red);
 	color: #fff;
 }
 
 .btn-reset:hover {
-	background: #fff;
-	color: #ff1a4a;
+	background: #ffffff;
+	color: var(--t1-red);
 	transform: translateY(-3px);
 	box-shadow: 0 5px 15px rgba(226, 1, 45, 0.5);
 }
 
-.btn-cancel {
-	background: #333;
-	color: #bbb;
+.btn-reset:hover {
+	background: #ffffff;
+	color: var(--t1-red);
+	transform: translateY(-3px);
+	box-shadow: 0 5px 15px rgba(226, 1, 45, 0.5);
 }
 
-.btn-cancel:hover {
-	background: #444;
+/* 삭제 버튼 */
+.btn-cancel {
+	background: #222;
 	color: #fff;
 }
 
-/* 권한 선택 영역 스타일 */
-.btn-form {
-	padding-top: 20px;
-	background: #1a1a1a;
-	border-top: 1px solid #333;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	background: #1a1a1a;
-}
-
-.btn-form select {
-	width: 100%;
-	padding: 12px 15px;
-	background: #0f0f0f;
-	border: 1px solid #444;
-	border-radius: 5px;
-	color: #ccc;
-	font-size: 0.9rem;
-	font-family: 'Pretendard', sans-serif;
-	appearance: none; /* 기본 화살표 제거 (선택사항) */
-	cursor: default;
-	transition: 0.3s;
-}
-
-/* disabled 상태일 때의 스타일 강조 */
-.btn-form select:disabled {
-	background: #111;
-	color: var(--t1-gold); /* 읽기 전용일 때 골드 포인트 */
-	border-color: #333;
-	opacity: 0.8;
-}
-
-/* select 박스 사이의 간격 및 라벨 느낌의 효과 */
-.btn-form select:focus {
-	outline: none;
-	border-color: var(--t1-red);
-	box-shadow: 0 0 10px rgba(226, 1, 45, 0.2);
-}
-
-/* 폼 내부 레이아웃 정렬 */
-.btn-form form {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-/* Decoration */
-.bottom-deco {
-	margin-top: 30px;
-	font-size: 12px;
-	color: #444;
-	text-align: center;
-	font-family: monospace;
-}
-
-.btn-list {
-	display: inline-block;
-	padding: 15px 40px;
-	background: var(--t1-red);
-	color: white;
-	text-decoration: none;
-	font-weight: bold;
-	border-radius: 5px;
-	transition: 0.3s;
-	border: none;
-	cursor: pointer;
-}
-
-.btn-list:hover {
-	background: #ffffff;
-	color: var(--t1-red);
-	box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+.btn-cancel:hover {
+	background: #ff1a4a;
+	color: #fff;
+	transform: translateY(-3px);
+	box-shadow: 0 5px 15px rgba(255, 26, 74, 0.5);
 }
 </style>
 </head>
+
 <body>
 
 	<div class="write-container">
+
 		<div class="header">
 			<h1>
-				회원정보<br> <span>${member.id}님의 회원 정보 수정</span>
+				상품정보<br> <span>${item.name} 상품 정보 수정</span>
 			</h1>
 		</div>
-		<form:form modelAttribute="member" action="/member/update"
-			method="post">
+
+		<form:form modelAttribute="item" action="/item/update" method="post"
+			enctype="multipart/form-data">
+
+			<!-- 상품 ID -->
 			<div class="form-group">
-				<label for="no">회원번호</label> <input type="text" id="no" name="no"
-					value="${member.no}" style="color: #989898" readonly>
-			</div>
-			<div class="form-group">
-				<label for="id">회원ID</label> <input type="text" id="id" name="id"
-					value="${member.id}" style="color: #989898" readonly>
+				<label>상품ID</label> <input type="text" name="id" value="${item.id}"
+					readonly style="color: #999;">
 			</div>
 
+			<!-- 상품명 -->
 			<div class="form-group">
-				<label for="name">회원NAME</label> <input type="text" id="name"
-					name="name" value="${member.name}" required>
+				<label>상품명</label> <input type="text" name="name"
+					value="${item.name}" required>
 			</div>
 
+			<!-- 가격 -->
 			<div class="form-group">
-				<label for="pw">회원PW</label> <input type="password" id="pw"
-					name="pw" value="${member.pw}" required>
-			</div>
-			<div class="btn-form">
-
-				<form:hidden path="no" />
-				<form:select path="authList[0].auth" disabled="">
-					<form:option value="" label="=== 부여된 권한이 없습니다 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
-				<form:select path="authList[1].auth" disabled="">
-					<form:option value="" label="=== 부여된 권한이 없습니다 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
-				<form:select path="authList[2].auth" disabled="">
-					<form:option value="" label="=== 부여된 권한이 없습니다 ===" />
-					<form:option value="ROLE_USER" label="사용자" />
-					<form:option value="ROLE_MEMBER" label="회원" />
-					<form:option value="ROLE_ADMIN" label="관리자" />
-				</form:select>
+				<label>상품가격</label> <input type="number" name="price"
+					value="${item.price}" required>
 			</div>
 
+			<!-- 기존 이미지 -->
+			<div class="form-group">
+				<label>기존 상품 이미지</label><br> <img
+					src="/item/display?id=${item.id}" width="300">
+			</div>
+
+			<!-- 수정 이미지 -->
+			<div class="form-group">
+				<label>상품 수정 이미지</label>
+
+				<div class="file-upload-wrapper">
+					<input type="file" id="picture" name="picture" class="file-input"
+						onchange="updateFileName(this)"> <label for="picture"
+						class="file-label"> <span class="file-btn">파일 선택</span> <span
+						id="file-name" class="file-name-text">선택된 파일 없음</span>
+					</label>
+				</div>
+			</div>
+
+			<!-- 설명 -->
+			<div class="form-group">
+				<label>상품 상세 설명</label>
+				<textarea name="description" required>${item.description}</textarea>
+			</div>
+
+			<!-- 버튼 영역 -->
 			<div class="btn-area">
-				<a href="/member/memberList" class="btn-list">회원리스트</a>
-				<button type="submit" class="btn btn-submit">회원수정</button>
-				<button type="reset" class="btn btn-reset">수정취소</button>
+
+				<!-- 리스트 -->
+				<a href="/item/list" class="btn btn-list">상품리스트</a>
+
+				<!-- 수정 -->
+				<button type="submit" class="btn btn-submit">상품수정</button>
+
+				<!-- 초기화 -->
+				<button type="reset" class="btn btn-reset">다시작성</button>
+
+				<!-- 삭제 -->
+				<a href="/item/delete?id=${item.id}" class="btn btn-cancel"
+					onclick="return confirm('정말 삭제하시겠습니까?');"> 상품삭제 </a>
+
 			</div>
+
 		</form:form>
 
-		<div class="bottom-deco">[ SYSTEM: READY TO TRANSMIT DATA TO
-			JDBCBOARD ]</div>
 	</div>
+
+	<script>
+		function updateFileName(input) {
+
+			const fileNameDisplay = document.getElementById('file-name');
+
+			if (input.files && input.files.length > 0) {
+				fileNameDisplay.innerText = input.files[0].name;
+				fileNameDisplay.style.color = "#ffffff";
+			} else {
+				fileNameDisplay.innerText = "선택된 파일 없음";
+				fileNameDisplay.style.color = "#666";
+			}
+		}
+	</script>
 
 </body>
 </html>

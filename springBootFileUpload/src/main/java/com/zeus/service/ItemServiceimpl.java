@@ -28,9 +28,10 @@ public class ItemServiceimpl implements ItemService {
 	}
 
 	@Override
+	@Transactional
 	public int update(Item item) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = itemMapper.update(item);
+		return count;
 	}
 
 	@Override
